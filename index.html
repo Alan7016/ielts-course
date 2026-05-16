@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Course - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2rem;
+        }
+
+        .header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header .username {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .welcome-banner {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .welcome-banner h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .welcome-banner p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .week-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .week-header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .week-header h3 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .week-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .day-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .day-card.locked {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .day-card.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .day-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .day-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .day-status {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .locked-icon {
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+
+        .footer {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📚 IELTS Course Dashboard</h1>
+            <div class="user-info">
+                <span class="username" id="usernameDisplay">👤 Student</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <h2>Welcome to Your 8-Week IELTS Journey! 🎓</h2>
+            <p>Complete each day's tasks in order. Each week builds on the previous one.<br>
+            Click on any available day below to start your lesson.</p>
+        </div>
+
+        <!-- Week 1 -->
+        <div class="week-section">
+            <div class="week-header">
+                <h3>📖 Week 1: Education</h3>
+                <p>Foundation skills and academic vocabulary</p>
+            </div>
+            <div class="days-grid">
+                <a href="week1/day1.html" class="day-card">
+                    <div class="day-number">1</div>
+                    <div class="day-title">Day 1</div>
+                    <div class="day-status">✅ Available</div>
+                </a>
+                <div class="day-card locked">
+                    <div class="day-number">2</div>
+                    <div class="day-title">Day 2</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">3</div>
+                    <div class="day-title">Day 3</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">4</div>
+                    <div class="day-title">Day 4</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">5</div>
+                    <div class="day-title">Day 5</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 2 -->
+        <div class="week-section">
+            <div class="week-header">
+                <h3>📖 Week 2: Technology</h3>
+                <p>Modern innovations and digital literacy</p>
+            </div>
+            <div class="days-grid">
+                <div class="day-card locked">
+                    <div class="day-number">1</div>
+                    <div class="day-title">Day 1</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">2</div>
+                    <div class="day-title">Day 2</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">3</div>
+                    <div class="day-title">Day 3</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">4</div>
+                    <div class="day-title">Day 4</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">5</div>
+                    <div class="day-title">Day 5</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 3 -->
+        <div class="week-section">
+            <div class="week-header">
+                <h3>📖 Week 3: Environment</h3>
+                <p>Climate, sustainability, and conservation</p>
+            </div>
+            <div class="days-grid">
+                <div class="day-card locked">
+                    <div class="day-number">1</div>
+                    <div class="day-title">Day 1</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">2</div>
+                    <div class="day-title">Day 2</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">3</div>
+                    <div class="day-title">Day 3</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">4</div>
+                    <div class="day-title">Day 4</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">5</div>
+                    <div class="day-title">Day 5</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 4 -->
+        <div class="week-section">
+            <div class="week-header">
+                <h3>📖 Week 4: Health & Lifestyle</h3>
+                <p>Wellness, fitness, and medical topics</p>
+            </div>
+            <div class="days-grid">
+                <div class="day-card locked">
+                    <div class="day-number">1</div>
+                    <div class="day-title">Day 1</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">2</div>
+                    <div class="day-title">Day 2</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">3</div>
+                    <div class="day-title">Day 3</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">4</div>
+                    <div class="day-title">Day 4</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">5</div>
+                    <div class="day-title">Day 5</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 5 -->
+        <div class="week-section">
+            <div class="week-header">
+                <h3>📖 Week 5: Culture & Society</h3>
+                <p>Traditions, customs, and social issues</p>
+            </div>
+            <div class="days-grid">
+                <div class="day-card locked">
+                    <div class="day-number">1</div>
+                    <div class="day-title">Day 1</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">2</div>
+                    <div class="day-title">Day 2</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">3</div>
+                    <div class="day-title">Day 3</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">4</div>
+                    <div class="day-title">Day 4</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">5</div>
+                    <div class="day-title">Day 5</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 6 -->
+        <div class="week-section">
+            <div class="week-header">
+                <h3>📖 Week 6: Business & Economics</h3>
+                <p>Commerce, trade, and financial systems</p>
+            </div>
+            <div class="days-grid">
+                <div class="day-card locked">
+                    <div class="day-number">1</div>
+                    <div class="day-title">Day 1</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">2</div>
+                    <div class="day-title">Day 2</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">3</div>
+                    <div class="day-title">Day 3</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">4</div>
+                    <div class="day-title">Day 4</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">5</div>
+                    <div class="day-title">Day 5</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 7 -->
+        <div class="week-section">
+            <div class="week-header">
+                <h3>📖 Week 7: Science & Innovation</h3>
+                <p>Research, discoveries, and breakthroughs</p>
+            </div>
+            <div class="days-grid">
+                <div class="day-card locked">
+                    <div class="day-number">1</div>
+                    <div class="day-title">Day 1</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">2</div>
+                    <div class="day-title">Day 2</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">3</div>
+                    <div class="day-title">Day 3</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">4</div>
+                    <div class="day-title">Day 4</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">5</div>
+                    <div class="day-title">Day 5</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 8 -->
+        <div class="week-section">
+            <div class="week-header">
+                <h3>📖 Week 8: Final Review & Practice</h3>
+                <p>Consolidation and exam preparation</p>
+            </div>
+            <div class="days-grid">
+                <div class="day-card locked">
+                    <div class="day-number">1</div>
+                    <div class="day-title">Day 1</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">2</div>
+                    <div class="day-title">Day 2</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">3</div>
+                    <div class="day-title">Day 3</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">4</div>
+                    <div class="day-title">Day 4</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+                <div class="day-card locked">
+                    <div class="day-number">5</div>
+                    <div class="day-title">Day 5</div>
+                    <div class="locked-icon">🔒</div>
+                    <div class="day-status">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>📚 IELTS Course Platform | 8 Weeks · 40 Days · Complete Preparation</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Check if user is logged in
+        if (!sessionStorage.getItem('loggedIn')) {
+            window.location.href = 'index.html';
+        }
+
+        // Display username
+        const username = sessionStorage.getItem('username');
+        if (username) {
+            document.getElementById('usernameDisplay').textContent = '👤 ' + username;
+        }
+
+        // Logout function
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+    </script>
+
+</body>
+</html>

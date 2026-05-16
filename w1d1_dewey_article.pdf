@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEEK 1 - DAY 1 (Education)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .splash-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .splash-title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .splash-subtitle {
+            font-size: 2.5rem;
+            color: #f0f0f0;
+            margin-bottom: 3rem;
+        }
+
+        .splash-button {
+            padding: 20px 60px;
+            font-size: 1.8rem;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .splash-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            display: none;
+        }
+
+        .container.active {
+            display: block;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Vocabulary Section */
+        .vocab-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .vocab-toggle {
+            width: 100%;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+
+        .vocab-toggle:hover {
+            transform: translateY(-2px);
+        }
+
+        .vocab-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .vocab-content.active {
+            max-height: 2000px;
+            padding-top: 20px;
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 15px;
+        }
+
+        .vocab-item {
+            padding: 12px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+
+        .vocab-word {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .vocab-definition {
+            color: #555;
+            margin-top: 5px;
+        }
+
+        /* Task Card */
+        .task-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .task-card.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .task-header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .task-title {
+            color: #667eea;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .task-description {
+            color: #666;
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Break Screen */
+        .break-screen {
+            text-align: center;
+            padding: 60px 30px;
+        }
+
+        .break-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .break-title {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .break-text {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .task-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        /* Answer Section */
+        .answer-section {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 5px solid #28a745;
+            display: none;
+        }
+
+        .answer-section.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .answer-title {
+            color: #28a745;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Input Fields */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Question Styles */
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .question-text {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            margin-left: 20px;
+        }
+
+        .option {
+            margin: 8px 0;
+        }
+
+        /* PDF Embed */
+        .pdf-container {
+            width: 100%;
+            height: 800px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        /* Video Container */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Audio Player */
+        .audio-player {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        /* Grammar Box */
+        .grammar-reminder {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #ffc107;
+            margin-bottom: 25px;
+        }
+
+        .grammar-reminder h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .grammar-reminder ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+
+        /* Listening Note Completion */
+        .listening-notes {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .listening-notes h3 {
+            margin-bottom: 15px;
+        }
+
+        .listening-notes ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .listening-notes li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .gap {
+            display: inline-block;
+            min-width: 200px;
+            border-bottom: 2px solid #667eea;
+            margin: 0 5px;
+        }
+
+        /* Completion Message */
+        .completion {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .completion-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 2.5rem;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+
+        .completion-text {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 25px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Individual Answer Feedback */
+        .answer-feedback {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 3px 10px;
+            border-radius: 5px;
+        }
+
+        .answer-feedback.correct {
+            color: #28a745;
+            background: #d4edda;
+        }
+
+        .answer-feedback.incorrect {
+            color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .input-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+
+        /* Two-column layout for reading passage */
+        .reading-split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .passage-column {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        .questions-column {
+            padding: 20px;
+        }
+
+        .passage-paragraph {
+            margin-bottom: 15px;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .passage-title {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .passage-subtitle {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        /* Question styling for IELTS format */
+        .ielts-question-group {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .question-instruction {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .question-item {
+            margin: 15px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .question-number {
+            font-weight: bold;
+            min-width: 30px;
+        }
+
+        .tf-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .tf-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .tf-option input[type="radio"] {
+            cursor: pointer;
+        }
+
+        input[type="text"].answer-input {
+            border: 2px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        input[type="text"].answer-input.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        input[type="text"].answer-input.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back to Dashboard Button -->
+    <a href="../dashboard.html" class="back-btn">← Back to Dashboard</a>
+
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-title">WEEK 1</div>
+        <div class="splash-subtitle">(Education) DAY One</div>
+        <button class="splash-button" onclick="startLearning()">OK</button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="mainContainer">
+        <!-- Header -->
+        <div class="header">
+            <h1>📚 WEEK 1 - DAY 1: Education</h1>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%;">
+                    <span id="progressText">0 / 10 Tasks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vocabulary Section -->
+        <div class="vocab-section">
+            <button class="vocab-toggle" onclick="toggleVocab()">
+                <span>📖 Daily Vocabulary (50 Words)</span>
+                <span id="vocabArrow">▼</span>
+            </button>
+            <div class="vocab-content" id="vocabContent">
+                <div class="vocab-grid">
+                    <div class="vocab-item">
+                        <div class="vocab-word">1. studious</div>
+                        <div class="vocab-definition">showing a strong tendency to spend time studying and reading</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">2. memorisation</div>
+                        <div class="vocab-definition">the process of storing information in memory without deep understanding</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">3. curriculum</div>
+                        <div class="vocab-definition">all the subjects, topics, and skills that students are expected to study</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">4. collaborative</div>
+                        <div class="vocab-definition">working together with others towards a shared goal</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">5. concentrate</div>
+                        <div class="vocab-definition">to focus your full attention on a task without being distracted</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">6. overcome</div>
+                        <div class="vocab-definition">to succeed in dealing with or controlling a problem</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">7. evaluated</div>
+                        <div class="vocab-definition">tested, measured, and judged in order to decide how effective something is</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">8. postgraduate</div>
+                        <div class="vocab-definition">a person studying at a higher level after completing their first degree</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">9. distractions</div>
+                        <div class="vocab-definition">things that prevent you from concentrating on what you are doing</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">10. scholarship</div>
+                        <div class="vocab-definition">a sum of money given to a student to help pay for their education</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">11. engagement</div>
+                        <div class="vocab-definition">active participation and involvement in learning</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">12. critical thinking</div>
+                        <div class="vocab-definition">the ability to analyze information objectively and make reasoned judgments</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">13. repetition</div>
+                        <div class="vocab-definition">doing or saying the same thing multiple times</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">14. dissatisfied</div>
+                        <div class="vocab-definition">not pleased or content with something</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">15. traditional</div>
+                        <div class="vocab-definition">following long-established customs or methods</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">16. pioneer</div>
+                        <div class="vocab-definition">a person who is among the first to explore or develop new ideas</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">17. influential</div>
+                        <div class="vocab-definition">having great influence or impact on someone or something</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">18. philosophy</div>
+                        <div class="vocab-definition">the study of fundamental questions about existence, knowledge, and values</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">19. instruction</div>
+                        <div class="vocab-definition">teaching or education; giving knowledge or information</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">20. passive</div>
+                        <div class="vocab-definition">accepting or allowing what happens without active response</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">21. lectures</div>
+                        <div class="vocab-definition">educational talks given to an audience, especially students</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">22. problem-solving</div>
+                        <div class="vocab-definition">the process of finding solutions to difficult or complex issues</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">23. laboratory</div>
+                        <div class="vocab-definition">a room or building equipped for scientific experiments and research</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">24. democracy</div>
+                        <div class="vocab-definition">a system of government by the whole population, typically through elected representatives</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">25. academic</div>
+                        <div class="vocab-definition">relating to education and scholarship</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">26. revise</div>
+                        <div class="vocab-definition">to study material again in preparation for an exam</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">27. approach</div>
+                        <div class="vocab-definition">a way of dealing with or thinking about something</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">28. background noise</div>
+                        <div class="vocab-definition">sounds in the environment that occur while doing another activity</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">29. equipment</div>
+                        <div class="vocab-definition">the necessary items or tools for a particular purpose</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">30. assignment</div>
+                        <div class="vocab-definition">a task or piece of work given to someone as part of their studies</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">31. disorder</div>
+                        <div class="vocab-definition">a disruption of normal physical or mental functions</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">32. dyslexia</div>
+                        <div class="vocab-definition">a learning difficulty that affects reading and spelling abilities</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">33. struggle</div>
+                        <div class="vocab-definition">to have difficulty doing something</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">34. environment</div>
+                        <div class="vocab-definition">the surroundings or conditions in which a person operates</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">35. preference</div>
+                        <div class="vocab-definition">a greater liking for one alternative over another</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">36. atlas</div>
+                        <div class="vocab-definition">a book of maps or charts</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">37. calculator</div>
+                        <div class="vocab-definition">an electronic device used for mathematical calculations</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">38. protractor</div>
+                        <div class="vocab-definition">a tool used for measuring angles</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">39. compass</div>
+                        <div class="vocab-definition">a tool for drawing circles or measuring distances</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">40. prepare</div>
+                        <div class="vocab-definition">to make ready or get ready for something</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">41. notes</div>
+                        <div class="vocab-definition">written records of information for study purposes</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">42. lecturers</div>
+                        <div class="vocab-definition">teachers at a college or university</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">43. relatively</div>
+                        <div class="vocab-definition">in comparison with something else; fairly</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">44. basics</div>
+                        <div class="vocab-definition">the essential facts or principles of a subject</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">45. comfortable</div>
+                        <div class="vocab-definition">providing physical ease and relaxation</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">46. complete</div>
+                        <div class="vocab-definition">to finish or bring to an end</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">47. various</div>
+                        <div class="vocab-definition">different from one another; several</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">48. essential</div>
+                        <div class="vocab-definition">absolutely necessary; extremely important</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">49. focus</div>
+                        <div class="vocab-definition">to direct attention or effort toward a particular task</div>
+                    </div>
+                    <div class="vocab-item">
+                        <div class="vocab-word">50. stage</div>
+                        <div class="vocab-definition">a point, period, or step in a process or development</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task 1: Mini Reading -->
+        <div class="task-card active" id="task1">
+            <div class="task-header">
+                <div class="task-title">📝 Task 1: Mini Reading Exercise</div>
+                <div class="task-description">Complete the text with the correct form of the verbs in the box.</div>
+            </div>
+
+            <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <strong>Verb Box:</strong> concentrate, do, find, learn, overcome, prepare, study, revise, take, teach
+            </div>
+
+            <div style="line-height: 2; font-size: 1.05rem;">
+                <p>Even the most studious among you will probably have difficulty studying at some stage in your academic career. If or when this happens, the only way to <span class="input-wrapper"><input type="text" id="q1_1" class="answer-input" style="width: 150px; display: inline-block;" placeholder="(1)"><span class="answer-feedback" id="fb1_1"></span></span> this problem is to go back to basics. First, make sure you have a comfortable environment to <span class="input-wrapper"><input type="text" id="q1_2" class="answer-input" style="width: 150px; display: inline-block;" placeholder="(2)"><span class="answer-feedback" id="fb1_2"></span></span> in. Some students need to have a quiet space to themselves and can't <span class="input-wrapper"><input type="text" id="q1_3" class="answer-input" style="width: 150px; display: inline-block;" placeholder="(3)"><span class="answer-feedback" id="fb1_3"></span></span> if there are too many distractions. Others need some sort of background noise, such as music or the company of friends. Whatever your personal preference is, you need to <span class="input-wrapper"><input type="text" id="q1_4" class="answer-input" style="width: 150px; display: inline-block;" placeholder="(4)"><span class="answer-feedback" id="fb1_4"></span></span> this first of all.</p>
+
+                <p>Next, make sure you have all of the equipment or tools that you need. For example, if you are <span class="input-wrapper"><input type="text" id="q1_5" class="answer-input" style="width: 150px; display: inline-block;" placeholder="(5)"><span class="answer-feedback" id="fb1_5"></span></span> a geography course and you have to <span class="input-wrapper"><input type="text" id="q1_6" class="answer-input" style="width: 150px; display: inline-block;" placeholder="(6)"><span class="answer-feedback" id="fb1_6"></span></span> about countries and their capital cities then you will need to have your atlas to hand. If you're <span class="input-wrapper"><input type="text" id="q1_7" class="answer-input" style="width: 150px; display: inline-block;" placeholder="(7)"><span class="answer-feedback" id="fb1_7"></span></span> your maths homework then be sure to find your calculator, ruler, protractor and compass before you start.</p>
+
+                <p>Perhaps you're not preparing a homework assignment or project, but are trying to <span class="input-wrapper"><input type="text" id="q1_8" class="answer-input" style="width: 150px; display: inline-block;" placeholder="(8)"><span class="answer-feedback" id="fb1_8"></span></span> for an exam. If so, you need to know exactly what is on your curriculum. You should also <span class="input-wrapper"><input type="text" id="q1_9" class="answer-input" style="width: 150px; display: inline-block;" placeholder="(9)"><span class="answer-feedback" id="fb1_9"></span></span> your notes and make sure that you have a clear understanding of what your lecturers have <span class="input-wrapper"><input type="text" id="q1_10" class="answer-input" style="width: 150px; display: inline-block;" placeholder="(10)"><span class="answer-feedback" id="fb1_10"></span></span> you. Of course, people with a learning disorder such as dyslexia may need to work harder than others at their studies as they often struggle to read even relatively simple texts.</p>
+            </div>
+
+            <div class="task-buttons">
+                <button class="btn btn-success" onclick="checkTask1Answers(); document.getElementById('nextBtn1').disabled=false;">Check Answers</button>
+                <button class="btn btn-primary" id="nextBtn1" onclick="nextTask('task1')" disabled style="opacity: 0.5;">Next Task</button>
+            </div>
+        </div>
+
+        <!-- Task 2: Article with Questions -->
+        <div class="task-card" id="task2">
+            <div class="task-header">
+                <div class="task-title">📄 Task 2: Article - John Dewey</div>
+                <div class="task-description">Read the article, then complete the worksheet and check your answers.</div>
+            </div>
+
+            <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">📌 Important Instructions:</h3>
+                <p style="color: #856404; line-height: 1.8;">
+                    <strong>Make sure the following PDF files are in the SAME FOLDER as this HTML file:</strong><br>
+                    • w1d1_dewey_article.pdf<br>
+                    • w1d1_dewey_worksheet.pdf<br>
+                    • w1d1_dewey_answers.pdf
+                </p>
+            </div>
+
+            <div style="background: #f0f0f0; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3 style="margin-bottom: 15px;">📖 Article:</h3>
+                <a href="w1d1_dewey_article.pdf" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none; margin-bottom: 10px;">📄 Open Article PDF</a>
+            </div>
+
+            <div style="background: #f0f0f0; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3 style="margin-bottom: 15px;">📝 Worksheet:</h3>
+                <a href="w1d1_dewey_worksheet.pdf" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none; margin-bottom: 10px;">📝 Open Worksheet PDF</a>
+            </div>
+
+            <div style="background: #f0f0f0; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3 style="margin-bottom: 15px;">✅ Answer Key:</h3>
+                <a href="w1d1_dewey_answers.pdf" target="_blank" class="btn btn-success" style="display: inline-block; text-decoration: none; margin-bottom: 10px;">✅ Open Answer Key PDF</a>
+                <p style="margin-top: 10px; color: #666; font-size: 0.9rem;">📌 Check your answers after completing the worksheet</p>
+            </div>
+
+            <div class="task-buttons">
+                <button class="btn btn-primary" onclick="nextTask('task2')">Done - Next Task</button>
+            </div>
+        </div>
+
+        <!-- Task 3: Reading Passage 1 -->
+        <div class="task-card" id="task3">
+            <div class="task-header">
+                <div class="task-title">📖 Task 3: IELTS Reading Passage</div>
+                <div class="task-description">Answer Questions 1–13 based on the reading passage below.</div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin: 20px 0; line-height: 1.8;">
+                <h2 style="color: #667eea; margin-bottom: 20px;">John Dewey: A Pioneer of Modern Education</h2>
+
+                <p>John Dewey (1859–1952) was one of the most influential figures in the development of modern education. Born in the United States, he became widely known for his ideas about how students learn and the role of schools in society. Dewey believed that education should not simply involve the transfer of knowledge, but should instead encourage active thinking and real-world experience.</p>
+
+                <p>Dewey grew up in a modest family and showed an early interest in philosophy and learning. After completing his university studies, he began working as a teacher. During this time, he became dissatisfied with traditional methods of instruction, which relied heavily on memorisation and repetition. He felt that such approaches did not prepare students for practical life.</p>
+
+                <p>In the late nineteenth century, Dewey began to develop his own educational theories. He argued that students learn more effectively when they are actively involved in the learning process. Rather than listening passively to lectures, they should engage in problem-solving activities and collaborative tasks. This approach later became known as "learning by doing".</p>
+
+                <p>Dewey also emphasised the importance of research in education. While working at the University of Chicago, he established a laboratory school where new teaching methods could be tested and evaluated. Teachers and researchers worked together to observe how students responded to different types of instruction. This allowed Dewey to refine his ideas based on evidence rather than assumption.</p>
+
+                <p>One of Dewey's key contributions was his belief that education should reflect the needs of society. He argued that schools should prepare students to participate actively in a democratic community. This meant developing not only academic knowledge but also social skills such as cooperation and communication. His ideas influenced education systems both in the United States and internationally.</p>
+
+                <p>Despite his success, Dewey's theories were not universally accepted. Some critics argued that his methods lacked structure and could lead to a decline in academic standards. Others believed that traditional approaches were more effective for certain subjects. Nevertheless, Dewey continued to promote his ideas through writing and public lectures.</p>
+
+                <p>In addition to his work in schools, Dewey wrote extensively on philosophy and education. His books and articles were widely read and translated into many languages. As a result, his influence extended far beyond the United States, shaping educational practices in Europe and Asia.</p>
+
+                <p>By the time of his death in 1952, Dewey had become a central figure in educational thought. Although some of his ideas have been modified over time, many of his principles remain relevant today. Modern approaches to teaching, particularly those that emphasise student engagement and critical thinking, continue to reflect his work.</p>
+            </div>
+
+            <h3 style="margin: 25px 0;">Questions 1–7: True / False / Not Given</h3>
+            <div class="question">
+                <div class="question-text">1. Dewey believed that education should mainly focus on memorising information.</div>
+                <input type="text" placeholder="Your answer: TRUE / FALSE / NOT GIVEN">
+            </div>
+            <div class="question">
+                <div class="question-text">2. Dewey began his career as a teacher.</div>
+                <input type="text" placeholder="Your answer: TRUE / FALSE / NOT GIVEN">
+            </div>
+            <div class="question">
+                <div class="question-text">3. Dewey developed his educational ideas before starting work at a university.</div>
+                <input type="text" placeholder="Your answer: TRUE / FALSE / NOT GIVEN">
+            </div>
+            <div class="question">
+                <div class="question-text">4. The laboratory school was used to test different teaching methods.</div>
+                <input type="text" placeholder="Your answer: TRUE / FALSE / NOT GIVEN">
+            </div>
+            <div class="question">
+                <div class="question-text">5. Dewey thought education should help students become active members of society.</div>
+                <input type="text" placeholder="Your answer: TRUE / FALSE / NOT GIVEN">
+            </div>
+            <div class="question">
+                <div class="question-text">6. All educators agreed with Dewey's teaching methods.</div>
+                <input type="text" placeholder="Your answer: TRUE / FALSE / NOT GIVEN">
+            </div>
+            <div class="question">
+                <div class="question-text">7. Dewey spent most of his career working outside the United States.</div>
+                <input type="text" placeholder="Your answer: TRUE / FALSE / NOT GIVEN">
+            </div>
+
+            <h3 style="margin: 25px 0;">Questions 8–13: Complete the Notes (ONE WORD ONLY)</h3>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                <p><strong>Early career</strong></p>
+                <p>• Worked as a <input type="text" placeholder="(8)" style="width: 200px;"></p>
+                <p>• Became dissatisfied with traditional methods such as memorisation</p>
+                
+                <p style="margin-top: 20px;"><strong>Educational approach</strong></p>
+                <p>• Promoted "learning by <input type="text" placeholder="(9)" style="width: 200px;">"</p>
+                <p>• Encouraged problem-solving and group activities</p>
+                
+                <p style="margin-top: 20px;"><strong>Research and development</strong></p>
+                <p>• Established a laboratory <input type="text" placeholder="(10)" style="width: 200px;"></p>
+                <p>• Methods were tested through observation and <input type="text" placeholder="(11)" style="width: 200px;"></p>
+                
+                <p style="margin-top: 20px;"><strong>Key ideas</strong></p>
+                <p>• Education should reflect the needs of <input type="text" placeholder="(12)" style="width: 200px;"></p>
+                <p>• Important to develop social skills like cooperation and <input type="text" placeholder="(13)" style="width: 200px;"></p>
+            </div>
+
+            <div class="task-buttons">
+                <button class="btn btn-success" onclick="showAnswers(3); document.getElementById('nextBtn3').disabled=false;">Check Answers</button>
+                <button class="btn btn-primary" id="nextBtn3" onclick="nextTask('task3')" disabled style="opacity: 0.5;">Next Task</button>
+            </div>
+
+            <div class="answer-section" id="answers3">
+                <div class="answer-title">✅ ANSWERS</div>
+                <p><strong>Questions 1-7:</strong></p>
+                <ol>
+                    <li>FALSE</li>
+                    <li>TRUE</li>
+                    <li>NOT GIVEN</li>
+                    <li>TRUE</li>
+                    <li>TRUE</li>
+                    <li>FALSE</li>
+                    <li>NOT GIVEN</li>
+                </ol>
+                <p><strong>Questions 8-13:</strong></p>
+                <ol start="8">
+                    <li>teacher</li>
+                    <li>doing</li>
+                    <li>school</li>
+                    <li>evaluation (or: evaluated)</li>
+                    <li>society</li>
+                    <li>communication</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- BREAK SCREEN -->
+        <div class="task-card" id="break">
+            <div class="break-screen">
+                <div class="break-emoji">☕</div>
+                <div class="break-title">Time for a Break!</div>
+                <div class="break-text">You've completed the first three tasks. Take a few minutes to rest, stretch, or grab a drink.</div>
+                <button class="btn btn-primary" onclick="nextTask('break')" style="font-size: 1.3rem; padding: 15px 40px;">Continue</button>
+            </div>
+        </div>
+
+        <!-- Task 4: Video Watching -->
+        <div class="task-card" id="task4">
+            <div class="task-header">
+                <div class="task-title">🎥 Task 4: Video Watching</div>
+                <div class="task-description">Watch the video about the US Education System and answer the questions below.</div>
+            </div>
+
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/YKMrJ9CRPpQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            
+            <div style="text-align: center; margin: 15px 0;">
+                <p style="color: #666; margin-bottom: 10px;">If the video doesn't load above, click here:</p>
+                <a href="https://www.youtube.com/watch?v=YKMrJ9CRPpQ" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">🎥 Watch on YouTube</a>
+            </div>
+
+            <h3 style="margin: 25px 0;">📝 Multiple Choice Questions</h3>
+
+            <div class="question">
+                <div class="question-text">1. What is the main idea of the passage?</div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q1" value="A"> A. The USA has only private schools</div>
+                    <div class="option"><input type="radio" name="q1" value="B"> B. The USA education system offers diverse and lifelong learning opportunities</div>
+                    <div class="option"><input type="radio" name="q1" value="C"> C. Kindergarten is the most important stage</div>
+                    <div class="option"><input type="radio" name="q1" value="D"> D. Only Ivy League universities are valuable</div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">2. What age group is kindergarten designed for?</div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q2" value="A"> A. 3–4</div>
+                    <div class="option"><input type="radio" name="q2" value="B"> B. 4–5</div>
+                    <div class="option"><input type="radio" name="q2" value="C"> C. 5–6</div>
+                    <div class="option"><input type="radio" name="q2" value="D"> D. 6–7</div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">3. Which grades are included in middle school in the USA?</div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q3" value="A"> A. Grades 1–5</div>
+                    <div class="option"><input type="radio" name="q3" value="B"> B. Grades 6–8</div>
+                    <div class="option"><input type="radio" name="q3" value="C"> C. Grades 9–10</div>
+                    <div class="option"><input type="radio" name="q3" value="D"> D. Grades 11–12</div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">4. What is a key feature of high school education in the USA?</div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q4" value="A"> A. Only science subjects are taught</div>
+                    <div class="option"><input type="radio" name="q4" value="B"> B. Students cannot choose subjects</div>
+                    <div class="option"><input type="radio" name="q4" value="C"> C. It offers elective courses based on interests</div>
+                    <div class="option"><input type="radio" name="q4" value="D"> D. It ends at grade 10</div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">5. Which type of institution is part of postsecondary education?</div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q5" value="A"> A. Kindergarten</div>
+                    <div class="option"><input type="radio" name="q5" value="B"> B. Elementary school</div>
+                    <div class="option"><input type="radio" name="q5" value="C"> C. Community colleges</div>
+                    <div class="option"><input type="radio" name="q5" value="D"> D. Middle school</div>
+                </div>
+            </div>
+
+            <h3 style="margin: 25px 0;">📚 Vocabulary Questions</h3>
+
+            <div class="question">
+                <div class="question-text">6. What does "panoramic" most nearly mean?</div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q6" value="A"> A. Very small</div>
+                    <div class="option"><input type="radio" name="q6" value="B"> B. Covering a wide view</div>
+                    <div class="option"><input type="radio" name="q6" value="C"> C. Colorful</div>
+                    <div class="option"><input type="radio" name="q6" value="D"> D. Expensive</div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">7. What is the meaning of "robust" in the passage?</div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q7" value="A"> A. Weak</div>
+                    <div class="option"><input type="radio" name="q7" value="B"> B. Simple</div>
+                    <div class="option"><input type="radio" name="q7" value="C"> C. Strong and well-developed</div>
+                    <div class="option"><input type="radio" name="q7" value="D"> D. Temporary</div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">8. What does "variegated" refer to?</div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q8" value="A"> A. Uniform</div>
+                    <div class="option"><input type="radio" name="q8" value="B"> B. Diverse or varied</div>
+                    <div class="option"><input type="radio" name="q8" value="C"> C. Old-fashioned</div>
+                    <div class="option"><input type="radio" name="q8" value="D"> D. Expensive</div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">9. What does "transitional stage" mean?</div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q9" value="A"> A. Final stage</div>
+                    <div class="option"><input type="radio" name="q9" value="B"> B. Beginning stage</div>
+                    <div class="option"><input type="radio" name="q9" value="C"> C. A period of change from one stage to another</div>
+                    <div class="option"><input type="radio" name="q9" value="D"> D. A break from studying</div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">10. What does "elective courses" mean?</div>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q10" value="A"> A. Mandatory subjects</div>
+                    <div class="option"><input type="radio" name="q10" value="B"> B. Subjects chosen by students</div>
+                    <div class="option"><input type="radio" name="q10" value="C"> C. Difficult subjects</div>
+                    <div class="option"><input type="radio" name="q10" value="D"> D. Online courses only</div>
+                </div>
+            </div>
+
+            <div class="task-buttons">
+                <button class="btn btn-success" onclick="showAnswers(4); document.getElementById('nextBtn4').disabled=false;">Check Answers</button>
+                <button class="btn btn-primary" id="nextBtn4" onclick="nextTask('task4')" disabled style="opacity: 0.5;">Next Task</button>
+            </div>
+
+            <div class="answer-section" id="answers4">
+                <div class="answer-title">✅ ANSWERS</div>
+                <p><strong>Multiple Choice:</strong></p>
+                <ol>
+                    <li>B - The USA education system offers diverse and lifelong learning opportunities</li>
+                    <li>C - 5–6</li>
+                    <li>B - Grades 6–8</li>
+                    <li>C - It offers elective courses based on interests</li>
+                    <li>C - Community colleges</li>
+                </ol>
+                <p><strong>Vocabulary:</strong></p>
+                <ol start="6">
+                    <li>B - Covering a wide view</li>
+                    <li>C - Strong and well-developed</li>
+                    <li>B - Diverse or varied</li>
+                    <li>C - A period of change from one stage to another</li>
+                    <li>B - Subjects chosen by students</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Task 5: Grammar -->
+        <div class="task-card" id="task5">
+            <div class="task-header">
+                <div class="task-title">📚 Task 5: Grammar - Infinitives and "to"</div>
+                <div class="task-description">Complete the sentences with the correct infinitive form.</div>
+            </div>
+
+            <div class="grammar-reminder">
+                <h3>📌 Quick Reminder:</h3>
+                <ul>
+                    <li><strong>Infinitive</strong> = to + base verb (to study, to learn, to teach)</li>
+                    <li><strong>Used after:</strong> want, need, decide, hope, plan, try, learn, begin, continue, etc.</li>
+                    <li><strong>Example:</strong> "Students need <strong>TO STUDY</strong> hard for exams."</li>
+                </ul>
+            </div>
+
+            <div class="question">
+                <div class="question-text">1. Many students struggle __________ (find) the right study method.</div>
+                <input type="text" placeholder="Your answer">
+            </div>
+
+            <div class="question">
+                <div class="question-text">2. Teachers encourage their students __________ (ask) questions in class.</div>
+                <input type="text" placeholder="Your answer">
+            </div>
+
+            <div class="question">
+                <div class="question-text">3. It's important __________ (prepare) well before an examination.</div>
+                <input type="text" placeholder="Your answer">
+            </div>
+
+            <div class="question">
+                <div class="question-text">4. Dewey wanted schools __________ (develop) critical thinking skills.</div>
+                <input type="text" placeholder="Your answer">
+            </div>
+
+            <div class="question">
+                <div class="question-text">5. Students should learn __________ (work) collaboratively with others.</div>
+                <input type="text" placeholder="Your answer">
+            </div>
+
+            <div class="question">
+                <div class="question-text">6. The laboratory was established __________ (test) new teaching methods.</div>
+                <input type="text" placeholder="Your answer">
+            </div>
+
+            <div class="question">
+                <div class="question-text">7. Some learners need __________ (revise) materials several times.</div>
+                <input type="text" placeholder="Your answer">
+            </div>
+
+            <div class="question">
+                <div class="question-text">8. Education helps people __________ (overcome) difficulties in life.</div>
+                <input type="text" placeholder="Your answer">
+            </div>
+
+            <div class="question">
+                <div class="question-text">9. Schools aim __________ (prepare) students for democratic society.</div>
+                <input type="text" placeholder="Your answer">
+            </div>
+
+            <div class="question">
+                <div class="question-text">10. Universities offer opportunities __________ (continue) your studies after graduation.</div>
+                <input type="text" placeholder="Your answer">
+            </div>
+
+            <div class="task-buttons">
+                <button class="btn btn-success" onclick="showAnswers(5); document.getElementById('nextBtn5').disabled=false;">Check Answers</button>
+                <button class="btn btn-primary" id="nextBtn5" onclick="nextTask('task5')" disabled style="opacity: 0.5;">Next Task</button>
+            </div>
+
+            <div class="answer-section" id="answers5">
+                <div class="answer-title">✅ ANSWERS</div>
+                <ol>
+                    <li><strong>to find</strong></li>
+                    <li><strong>to ask</strong></li>
+                    <li><strong>to prepare</strong></li>
+                    <li><strong>to develop</strong></li>
+                    <li><strong>to work</strong></li>
+                    <li><strong>to test</strong></li>
+                    <li><strong>to revise</strong></li>
+                    <li><strong>to overcome</strong> (or <strong>overcome</strong> - both acceptable after "help")</li>
+                    <li><strong>to prepare</strong></li>
+                    <li><strong>to continue</strong></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Task 6: Listening -->
+        <div class="task-card" id="task6">
+            <div class="task-header">
+                <div class="task-title">🎧 Task 6: Listening - Section 3.1</div>
+                <div class="task-description">Listen to the talk for students and complete the notes. Write NO MORE THAN TWO WORDS for each answer.</div>
+            </div>
+
+            <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin: 20px 0; border-left: 5px solid #ffc107;">
+                <p style="color: #856404;">
+                    <strong>📌 Make sure "listening_track.mp3" is in the SAME FOLDER as this HTML file!</strong>
+                </p>
+            </div>
+
+            <audio controls class="audio-player" id="audioPlayer">
+                <source src="listening_track.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            
+            <p style="text-align: center; margin-top: 10px; color: #666; font-size: 0.9rem;">
+                If audio doesn't play, make sure the MP3 file is in the same folder as this HTML file.
+            </p>
+
+            <div class="listening-notes">
+                <h3>Continuing your studies <em>after graduation</em></h3>
+                <h4>Writing your <em>dissertation</em></h4>
+                
+                <p><strong>Important considerations:</strong></p>
+                <ul>
+                    <li>Many students struggle to find a research <span class="gap">(1)</span>.</li>
+                    <li>Writing a <span class="gap">(2)</span> <em>is easier</em> if you make the right choice.</li>
+                </ul>
+
+                <p style="margin-top: 20px;"><strong>You need to:</strong></p>
+                <ul>
+                    <li>Study the <span class="gap">(3)</span>.</li>
+                    <li>Have a <em>wide</em> <span class="gap">(4)</span> of your <em>field of study</em>.</li>
+                    <li><em>Establish</em> what is <span class="gap">(5)</span> in your field.</li>
+                    <li>Have a clear idea of the <span class="gap">(6)</span> of your study.</li>
+                    <li><em>Consider</em> whether there are any <span class="gap">(7)</span> in existing research.</li>
+                    <li><em>Think about</em> your <span class="gap">(8)</span> carefully.</li>
+                    <li>Ask about <span class="gap">(9)</span> from outside sources.</li>
+                    <li>Ask your <span class="gap">(10)</span> to check your <em>results</em>.</li>
+                </ul>
+            </div>
+
+            <div class="task-buttons">
+                <button class="btn btn-success" onclick="showAnswers(6); document.getElementById('nextBtn6').disabled=false;">Check Answers</button>
+                <button class="btn btn-primary" id="nextBtn6" onclick="nextTask('task6')" disabled style="opacity: 0.5;">Complete</button>
+            </div>
+
+            <div class="answer-section" id="answers6">
+                <div class="answer-title">✅ ANSWERS</div>
+                <ol>
+                    <li><strong>topic / question</strong></li>
+                    <li><strong>dissertation</strong></li>
+                    <li><strong>literature</strong></li>
+                    <li><strong>knowledge / understanding</strong></li>
+                    <li><strong>already known</strong></li>
+                    <li><strong>scope / objectives</strong></li>
+                    <li><strong>gaps</strong></li>
+                    <li><strong>methodology</strong></li>
+                    <li><strong>funding / support</strong></li>
+                    <li><strong>supervisor</strong></li>
+                </ol>
+                <p style="margin-top: 15px; color: #666;"><em>Note: Answers may vary slightly. The key is staying within the 2-word limit and capturing the correct meaning from the audio.</em></p>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="task-card" id="completion">
+            <div class="completion">
+                <div class="completion-emoji">🎉</div>
+                <div class="completion-title">Congratulations!</div>
+                <div class="completion-text">You've successfully completed all tasks for Week 1, Day 1.<br>Great job on your learning journey!</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentTask = 0;
+        const totalTasks = 10; // Including break as a "task"
+        const taskOrder = ['task1', 'task2', 'task3', 'break', 'task4', 'task5', 'task6'];
+
+        function startLearning() {
+            document.getElementById('splashScreen').classList.add('hidden');
+            setTimeout(() => {
+                document.getElementById('mainContainer').classList.add('active');
+            }, 500);
+        }
+
+        function toggleVocab() {
+            const content = document.getElementById('vocabContent');
+            const arrow = document.getElementById('vocabArrow');
+            content.classList.toggle('active');
+            arrow.textContent = content.classList.contains('active') ? '▲' : '▼';
+        }
+
+        function showAnswers(taskNum) {
+            document.getElementById('answers' + taskNum).classList.add('show');
+        }
+
+        // Task 1: Check answers with individual feedback
+        function checkTask1Answers() {
+            const answers = {
+                'q1_1': ['overcome'],
+                'q1_2': ['study'],
+                'q1_3': ['concentrate'],
+                'q1_4': ['find'],
+                'q1_5': ['taking', 'doing'],
+                'q1_6': ['learn'],
+                'q1_7': ['doing'],
+                'q1_8': ['revise', 'prepare'],
+                'q1_9': ['revise'],
+                'q1_10': ['taught']
+            };
+
+            for (let qId in answers) {
+                const input = document.getElementById(qId);
+                const feedback = document.getElementById('fb' + qId.substring(2)); // fb1_1, fb1_2, etc.
+                const userAnswer = input.value.trim().toLowerCase();
+                
+                const correctAnswers = answers[qId];
+                const isCorrect = correctAnswers.some(ans => ans.toLowerCase() === userAnswer);
+                
+                if (isCorrect) {
+                    input.classList.remove('incorrect');
+                    input.classList.add('correct');
+                    feedback.textContent = '✅ Correct';
+                    feedback.className = 'answer-feedback correct';
+                } else {
+                    input.classList.remove('correct');
+                    input.classList.add('incorrect');
+                    feedback.textContent = '❌ Incorrect (Answer: ' + correctAnswers.join(' or ') + ')';
+                    feedback.className = 'answer-feedback incorrect';
+                }
+            }
+        }
+
+        function completeTask(taskNum) {
+            // Show answers first
+            if (document.getElementById('answers' + taskNum)) {
+                document.getElementById('answers' + taskNum).classList.add('show');
+            }
+            
+            // Wait a moment for answers to appear, then move to next task
+            setTimeout(() => {
+                nextTask(taskOrder[currentTask]);
+            }, 800);
+        }
+
+        function nextTask(currentTaskId) {
+            // Hide current task
+            const current = document.getElementById(currentTaskId);
+            current.classList.remove('active');
+
+            // Move to next task
+            currentTask++;
+            
+            if (currentTask < taskOrder.length) {
+                const nextTaskId = taskOrder[currentTask];
+                document.getElementById(nextTaskId).classList.add('active');
+                
+                // Update progress (excluding break from count)
+                let progressCount = currentTask;
+                if (currentTask >= 4) progressCount--; // Subtract 1 if we've passed the break
+                
+                const percentage = (progressCount / 9) * 100; // 9 actual tasks
+                document.getElementById('progressBar').style.width = percentage + '%';
+                document.getElementById('progressText').textContent = progressCount + ' / 9 Tasks';
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                // Show completion
+                document.getElementById('completion').classList.add('active');
+                document.getElementById('progressBar').style.width = '100%';
+                document.getElementById('progressText').textContent = '9 / 9 Tasks - Complete!';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
